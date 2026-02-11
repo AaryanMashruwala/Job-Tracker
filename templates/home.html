@@ -2,11 +2,82 @@
 <html>
 <head>
     <title>Job Tracker</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; }
+        h1 { color: #2c3e50; }
+        form { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { margin-top: 15px; padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #34495e; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #2c3e50; color: white; }
+        tr:hover { background: #f5f5f5; }
+        .status-applied { color: #3498db; }
+        .status-interview { color: #f39c12; }
+        .status-offer { color: #27ae60; }
+        .status-rejected { color: #e74c3c; }
+        .empty { text-align: center; color: #999; padding: 40px; }
+    </style>
 </head>
 <body>
     <h1>Job Search Command Center</h1>
-    <p>Your job search starts here.</p>
+
+    <h2>Add New Application</h2>
+    <form action="/add" method="post">
+        <label>Company</label>
+        <input type="text" name="company" required>
+
+        <label>Role</label>
+        <input type="text" name="role" required>
+
+        <label>Job URL</label>
+        <input type="url" name="url">
+
+        <label>Date Applied</label>
+        <input type="date" name="date_applied" required>
+
+        <label>Status</label>
+        <select name="status">
+            <option value="Applied">Applied</option>
+            <option value="Phone Screen">Phone Screen</option>
+            <option value="Interview">Interview</option>
+            <option value="Offer">Offer</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Ghosted">Ghosted</option>
+        </select>
+
+        <label>Notes</label>
+        <textarea name="notes" rows="3"></textarea>
+
+        <button type="submit">Add Application</button>
+    </form>
+
+    <h2>Your Applications</h2>
+    {% if applications %}
+    <table>
+        <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Date Applied</th>
+            <th>Actions</th>
+        </tr>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.company }}</td>
+            <td>{{ app.role }}</td>
+            <td class="status-{{ app.status|lower|replace(' ', '-') }}">{{ app.status }}</td>
+            <td>{{ app.date_applied }}</td>
+            <td>
+                <a href="/delete/{{ app.id }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p class="empty">No applications yet. Add your first one above!</p>
+    {% endif %}
 </body>
 </html>
-```
-
