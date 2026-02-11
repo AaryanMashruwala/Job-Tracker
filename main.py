@@ -55,3 +55,33 @@ def delete_application(app_id: int, db: Session = Depends(get_db)):
         db.delete(application)
         db.commit()
     return RedirectResponse(url="/", status_code=303)
+
+@app.get("/edit/{app_id}")
+def edit_form(app_id: int, request: Request, db: Session = Depends(get_db)):
+    application = db.query(Application).filter(Application.id == app_id).first()
+    return templates.TemplateResponse("edit.html", {
+        "request": request,
+        "application": application
+    })
+
+@app.post("/edit/{app_id}")
+def edit_application(
+    app_id: int,
+    company: str = Form(...),
+    role: str = Form(...),
+    url: str = Form(""),
+    date_applied: str = Form(...),
+    status: str = Form("Applied"),
+    notes: str = Form(""),
+    db: Session = Depends(get_db)
+):
+    application = db.query(Application).filter(Application.id == app_id).first()
+    if application:
+        application.company = company
+        application.role = role
+        application.url = url
+        application.date_applied = date_applied
+        application.status = status
+        application.notes = notes
+        db.commit()
+    return RedirectResponse(url="/", status_code=303)

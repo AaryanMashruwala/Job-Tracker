@@ -71,7 +71,7 @@
             <td class="status-{{ app.status|lower|replace(' ', '-') }}">{{ app.status }}</td>
             <td>{{ app.date_applied }}</td>
             <td>
-                <a href="/delete/{{ app.id }}">Delete</a>
+                <a href="/edit/{{ app.id }}">Edit</a> | <a href="/delete/{{ app.id }}">Delete</a>
             </td>
         </tr>
         {% endfor %}
